@@ -3,9 +3,8 @@ const gameBoard = (function() {
     const board = [
         ["","",""],
         ["","",""],
-        ["1","",""]
+        ["","",""]
     ]
-
     
 
 
@@ -41,12 +40,44 @@ const gameBoard = (function() {
             }
         }
     }
+
+    const clearBoard = function() {
+        for (let i=0; i < 3; i++) {
+            for (let j=0;j < 3; j++) {
+                board[i][j] = ""
+            }
+        }
+        updateDisplay() 
+    }
+
     const cells = document.querySelectorAll('.cell')
     cells.forEach(cell => cell.addEventListener('click', clickEvent))
 
-    return {updateDisplay}
+    return {updateDisplay, clearBoard}
 
 })()
     
 
 gameBoard.updateDisplay()
+
+
+
+const gameController  = (function() {
+    const startGameBtn = document.querySelector('.startgame')
+    
+    const startGame = function() {
+        modal.style.display = 'flex'
+        
+    }
+    
+    startGameBtn.addEventListener('click', startGame)
+    const modal = document.querySelector('.modal')
+
+    
+
+})()
+
+const Player = (mark) => {
+    const playerMark = mark
+    return {playerMark}
+}

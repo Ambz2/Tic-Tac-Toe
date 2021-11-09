@@ -1,6 +1,6 @@
-.body {
+body {
     height:100vh;
-    
+    background-color: rgb(207, 240, 240);
 }
 
 .container {
@@ -18,4 +18,16 @@
     justify-content:center;
     align-items: center;
     font-size:100px;
+}
+
+.modal {
+    background-color: white;
+    z-index: 9;
+    padding: 1%;
+    position: absolute;
+    display:none;
+    flex-wrap:wrap;
+    gap:20px;
+    top:35%;
+    left:10%;
 }
