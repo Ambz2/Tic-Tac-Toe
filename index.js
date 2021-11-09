@@ -6,11 +6,22 @@ const gameBoard = (function() {
         ["1","",""]
     ]
 
-    const cells = document.querySelectorAll('.cell')
+    
 
 
     const clickEvent = function() {
-        console.log('hi')
+        const coords = this.dataset.coord
+        const array = coords.split(",")
+        const xcoord = array[0]
+        const ycoord = array[1]
+        if (board[xcoord][ycoord] == false) {
+            insertPlay(xcoord, ycoord)
+            updateDisplay()
+        }
+    }
+    
+    const insertPlay = function(xcoord, ycoord) {
+        board[xcoord][ycoord] = "1"
     }
 
     const convertBinary = function(i,j) {
@@ -30,12 +41,10 @@ const gameBoard = (function() {
             }
         }
     }
-
+    const cells = document.querySelectorAll('.cell')
     cells.forEach(cell => cell.addEventListener('click', clickEvent))
 
-    
     return {updateDisplay}
-    
 
 })()
     
