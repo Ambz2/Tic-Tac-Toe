@@ -16,17 +16,24 @@ const gameBoard = (function() {
         if (board[xcoord][ycoord] == false) {
             insertPlay(xcoord, ycoord)
             updateDisplay()
+            gameController.nextTurn()
         }
     }
     
     const insertPlay = function(xcoord, ycoord) {
-        board[xcoord][ycoord] = "1"
+        const turn = gameController.checkTurn()
+        console.log(turn)
+        if (turn == 'playerOne') {
+            board[xcoord][ycoord] = 1
+        } else {
+            board[xcoord][ycoord] = 2
+        }
     }
 
     const convertBinary = function(i,j) {
         if (board[i][j] == '1') {
             return 'x'
-        } else if (board[i][j] == '0') {
+        } else if (board[i][j] == '2') {
             return 'o'
         }   else {return} 
     }
@@ -50,6 +57,12 @@ const gameBoard = (function() {
         updateDisplay() 
     }
 
+    const checkWins = function() {
+        
+    }
+
+
+
     const cells = document.querySelectorAll('.cell')
     cells.forEach(cell => cell.addEventListener('click', clickEvent))
 
@@ -60,24 +73,64 @@ const gameBoard = (function() {
 
 gameBoard.updateDisplay()
 
+const Player = (name, mark) => {
+    const playerName = name
+    const playerMark = mark
+    const wins = 0
+    return {playerName, wins, mark}
+}
 
+
+let playerOne
+let playerTwo
 
 const gameController  = (function() {
-    const startGameBtn = document.querySelector('.startgame')
+    const openModalBtn = document.querySelector('.openmodal')
+    const startGameBtn = document.querySelector('#startgame')
+    const modal = document.querySelector('.modal')
+    const closeModalBtn = document.querySelector('.closemodal')
+    const nameOne = document.querySelector('#name1') 
+    const nameTwo = document.querySelector('#name2') 
     
     const startGame = function() {
-        modal.style.display = 'flex'
-        
+        modal.style.display = 'none'
+        playerOne = Player(nameOne.value, 'x')
+        playerTwo = Player(nameTwo.value, 'o')
+        console.log(playerOne)
     }
     
-    startGameBtn.addEventListener('click', startGame)
-    const modal = document.querySelector('.modal')
+    openModalBtn.addEventListener('click', () => {
+        modal.style.display = 'flex'
+    })
 
+    closeModalBtn.addEventListener('click', () => {
+        modal.style.display='none'
+    } )
+
+    startGameBtn.addEventListener('click', startGame)
+    
+    let turn = 1
+    const nextTurn = function()  {
+        turn += 1
+        console.log(turn)
+    }
+
+    const resetTurn = function() {
+        turn = 1
+    }
+
+    const checkTurn = function() {
+        if (turn % 2 == 1) {
+            return 'playerOne'
+        }
+        if (turn % 2 == 0) {
+            return 'playerTwo'
+        }
+    }
+    return {checkTurn, nextTurn}
     
 
 })()
 
-const Player = (mark) => {
-    const playerMark = mark
-    return {playerMark}
-}
+
+
