@@ -14,18 +14,19 @@ const gameBoard = (function() {
         const xcoord = array[0]
         const ycoord = array[1]
         if (board[xcoord][ycoord] == false && gameOver == false) {
+            gameController.updateTurn()
             insertPlay(xcoord, ycoord)
             updateDisplay()
             gameController.nextTurn()
             checkWins()
-            
+            gameController.updateTurn()
         }
     }
     
     const insertPlay = function(xcoord, ycoord) {
         const turn = gameController.checkTurn()
 
-        if (turn == 'playerOne') {
+        if (turn == playerOne) {
             board[xcoord][ycoord] = 1
         } else {
             board[xcoord][ycoord] = 4
@@ -34,9 +35,9 @@ const gameBoard = (function() {
 
     const convertBinary = function(i,j) {
         if (board[i][j] == '1') {
-            return 'x'
+            return playerOne.mark
         } else if (board[i][j] == '4') {
-            return 'o'
+            return playerTwo.mark
         }   else {return} 
     }
     
@@ -50,13 +51,14 @@ const gameBoard = (function() {
         }
     }
 
-    const clearBoard = function() {
+    const resetBoard = function() {
         for (let i=0; i < 3; i++) {
             for (let j=0;j < 3; j++) {
                 board[i][j] = ""
             }
         }
         updateDisplay() 
+        gameOver = false
     }
 
     const checkWins = function() {
@@ -65,10 +67,12 @@ const gameBoard = (function() {
             if (total == 3) {
                 console.log('Player One wins')
                 gameOver = true
+                gameController.gameOver(playerOne)
             }
             if (total == 12) {
                 console.log('Player Two wins')
                 gameOver = true
+                gameController.gameOver(playerTwo)
             }
         }
         for (let j=0; j<3; j++) {
@@ -77,10 +81,12 @@ const gameBoard = (function() {
             if (total == 3) {
                 console.log('Player One wins')
                 gameOver = true
+                gameController.gameOver(playerOne)
             }
             if (total == 12) {
                 console.log('Player Two wins')
                 gameOver = true
+                gameController.gameOver(playerTwo)
             }
         }
         
@@ -91,14 +97,16 @@ const gameBoard = (function() {
         if (reducedDiagArray1 == 3 || reducedDiagArray2 == 3) {
             console.log('Player One Wins')
             gameOver = true
+            gameController.gameOver(playerOne)
         }
         if (reducedDiagArray2 == 12 || reducedDiagArray2 == 12) {
             console.log('Player Two Wins')
             gameOver = true
+            gameController.gameOver(playerTwo)
         }
         
-        if (turn == 10) console.log(`It's a tie`)
-             
+        if (turn == 10) {gameController.gameOver('Tie')}
+        
     }  
 
 
@@ -106,7 +114,7 @@ const gameBoard = (function() {
     const cells = document.querySelectorAll('.cell')
     cells.forEach(cell => cell.addEventListener('click', clickEvent))
 
-    return {updateDisplay, clearBoard}
+    return {updateDisplay, resetBoard}
 
 })()
     
@@ -116,8 +124,10 @@ const gameBoard = (function() {
 const Player = (name, mark) => {
     const playerName = name
     const playerMark = mark
-    const wins = 0
-    return {playerName, wins, mark}
+    let wins = 0
+
+    
+    return {playerName, wins, mark, }
 }
 
 
@@ -132,12 +142,18 @@ const gameController  = (function() {
     const closeModalBtn = document.querySelector('.closemodal')
     const nameOne = document.querySelector('#name1') 
     const nameTwo = document.querySelector('#name2') 
+    const container = document.querySelector('.container')
+    const gameOverModal = document.querySelector('.gameover')
+    const tryAgainBtn = document.querySelector('#tryagain')
+
     
+
     const startGame = function() {
         modal.style.display = 'none'
         playerOne = Player(nameOne.value, 'x')
         playerTwo = Player(nameTwo.value, 'o')
-
+        container.style.display = 'grid'
+        updateTurn()
     }
     
     openModalBtn.addEventListener('click', () => {
@@ -162,13 +178,50 @@ const gameController  = (function() {
 
     const checkTurn = function() {
         if (turn % 2 == 1) {
-            return 'playerOne'
+            return playerOne
+            
         }
         if (turn % 2 == 0) {
-            return 'playerTwo'
+            return playerTwo
         }
     }
-    return {checkTurn, nextTurn, turn}
+
+    const addWin = function(player) {
+        player.wins += 1
+    }
+
+    const updateTurn = function() {
+        const turnsHeader = document.querySelector('#turn')
+        const currentPlayer = checkTurn()
+        console.log(currentPlayer)
+        turnsHeader.textContent = `Turn: ${currentPlayer.playerName}, ${currentPlayer.mark}`
+    }
+
+    const gameOver = function(winner) {
+        gameOverModal.style.display = 'grid'
+        
+        const winnerDisplay = document.querySelector('#winner')
+        addWin(winner)
+
+        if (winner == playerOne || playerTwo) {
+            winnerDisplay.textContent = `Winner: ${winner.playerName} Wins: ${winner.wins}`
+        } 
+        if (winner == 'Tie') {
+            winnerDisplay.textContent = `It's a tie!`
+        }
+
+    }
+
+    
+
+    const tryAgain = function() {
+        gameOverModal.style.display = 'none'
+        gameBoard.resetBoard()
+    }
+
+    tryAgainBtn.addEventListener('click', tryAgain)
+
+    return {checkTurn, nextTurn, addWin, updateTurn, gameOver}
     
 
 })()

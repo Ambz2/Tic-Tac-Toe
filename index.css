@@ -19,9 +19,9 @@ h1 {
 }
 
 .container {
-    width: 70%;
-    height:70%;
-    display:grid;
+    width: 60%;
+    height:60%;
+    display:none;
     grid-gap:1px;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
@@ -80,7 +80,7 @@ h1 {
     background-color: black;
     color:rgb(248, 229, 229);
     font-family: "Walter Turncoat", cursive;
-    font-size: 24px;
+    font-size: 120%;
     border-radius: 10px;
 }
 
@@ -97,4 +97,11 @@ h1 {
 
 .gameover > h1 {
     color:black;
+}
+
+h3 {
+    color:white;
+    align-self:flex-start;
+    margin-left:30px;
+    font-size:28px;
 }
