@@ -18,6 +18,7 @@ const gameBoard = (function() {
             updateDisplay()
             gameController.nextTurn()
             checkWins()
+            
         }
     }
     
@@ -95,6 +96,8 @@ const gameBoard = (function() {
             console.log('Player Two Wins')
             gameOver = true
         }
+        
+        if (turn == 10) console.log(`It's a tie`)
              
     }  
 
@@ -120,6 +123,7 @@ const Player = (name, mark) => {
 
 let playerOne
 let playerTwo
+let turn = 1
 
 const gameController  = (function() {
     const openModalBtn = document.querySelector('.openmodal')
@@ -146,9 +150,10 @@ const gameController  = (function() {
 
     startGameBtn.addEventListener('click', startGame)
     
-    let turn = 1
+    
     const nextTurn = function()  {
         turn += 1
+        return turn
     }
 
     const resetTurn = function() {
@@ -163,7 +168,7 @@ const gameController  = (function() {
             return 'playerTwo'
         }
     }
-    return {checkTurn, nextTurn}
+    return {checkTurn, nextTurn, turn}
     
 
 })()
