@@ -194,7 +194,9 @@ const gameController  = (function() {
         const turnsHeader = document.querySelector('#turn')
         const currentPlayer = checkTurn()
         console.log(currentPlayer)
-        turnsHeader.textContent = `Turn: ${currentPlayer.playerName}, ${currentPlayer.mark}`
+        turnsHeader.textContent = `Turn: ${currentPlayer.playerName}, ${currentPlayer.mark}
+            || ${playerOne.playerName} Wins: ${playerOne.wins} ||   
+            ${playerTwo.playerName} Wins: ${playerTwo.wins} `
     }
 
     const gameOver = function(winner) {
@@ -217,6 +219,7 @@ const gameController  = (function() {
     const tryAgain = function() {
         gameOverModal.style.display = 'none'
         gameBoard.resetBoard()
+        turn = 1
     }
 
     tryAgainBtn.addEventListener('click', tryAgain)
