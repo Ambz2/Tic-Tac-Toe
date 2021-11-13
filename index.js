@@ -6,34 +6,35 @@ const gameBoard = (function() {
         ["","",""]
     ]
     
-
+    let gameOver = false
 
     const clickEvent = function() {
         const coords = this.dataset.coord
         const array = coords.split(",")
         const xcoord = array[0]
         const ycoord = array[1]
-        if (board[xcoord][ycoord] == false) {
+        if (board[xcoord][ycoord] == false && gameOver == false) {
             insertPlay(xcoord, ycoord)
             updateDisplay()
             gameController.nextTurn()
+            checkWins()
         }
     }
     
     const insertPlay = function(xcoord, ycoord) {
         const turn = gameController.checkTurn()
-        console.log(turn)
+
         if (turn == 'playerOne') {
             board[xcoord][ycoord] = 1
         } else {
-            board[xcoord][ycoord] = 2
+            board[xcoord][ycoord] = 4
         }
     }
 
     const convertBinary = function(i,j) {
         if (board[i][j] == '1') {
             return 'x'
-        } else if (board[i][j] == '2') {
+        } else if (board[i][j] == '4') {
             return 'o'
         }   else {return} 
     }
@@ -58,8 +59,44 @@ const gameBoard = (function() {
     }
 
     const checkWins = function() {
+        for (let i=0; i<3; i++) {
+            let total = board[i].reduce((a,b) => Number(a)+Number(b), 0)
+            if (total == 3) {
+                console.log('Player One wins')
+                gameOver = true
+            }
+            if (total == 12) {
+                console.log('Player Two wins')
+                gameOver = true
+            }
+        }
+        for (let j=0; j<3; j++) {
+            let columnArray = [board[0][j],board[1][j],board[2][j]]
+            let total = columnArray.reduce((a,b) => Number(a)+Number(b), 0)
+            if (total == 3) {
+                console.log('Player One wins')
+                gameOver = true
+            }
+            if (total == 12) {
+                console.log('Player Two wins')
+                gameOver = true
+            }
+        }
         
-    }
+        let diagArray1 = [board[0][0],board[1][1],board[2][2]]
+        let diagArray2 = [board[0][2], board[1][1], board[2][0]]
+        let reducedDiagArray1 = diagArray1.reduce((a,b) => Number(a)+Number(b), 0)
+        let reducedDiagArray2 = diagArray2.reduce((a,b) => Number(a) + Number(b))
+        if (reducedDiagArray1 == 3 || reducedDiagArray2 == 3) {
+            console.log('Player One Wins')
+            gameOver = true
+        }
+        if (reducedDiagArray2 == 12 || reducedDiagArray2 == 12) {
+            console.log('Player Two Wins')
+            gameOver = true
+        }
+             
+    }  
 
 
 
@@ -71,7 +108,7 @@ const gameBoard = (function() {
 })()
     
 
-gameBoard.updateDisplay()
+
 
 const Player = (name, mark) => {
     const playerName = name
@@ -96,7 +133,7 @@ const gameController  = (function() {
         modal.style.display = 'none'
         playerOne = Player(nameOne.value, 'x')
         playerTwo = Player(nameTwo.value, 'o')
-        console.log(playerOne)
+
     }
     
     openModalBtn.addEventListener('click', () => {
@@ -112,7 +149,6 @@ const gameController  = (function() {
     let turn = 1
     const nextTurn = function()  {
         turn += 1
-        console.log(turn)
     }
 
     const resetTurn = function() {
